@@ -23,7 +23,7 @@ void take_fork(t_philo *p)
     printf_msg(tf, p, 1);   
     pthread_mutex_lock(&p->para->forks[secondfork]);
     p->rfork = 1;
-    printf_msg(tf, p, 1);
+    printf_msg(tf, p, 2);
 }
 
 void remove_fork(t_philo *p)
@@ -51,7 +51,7 @@ int eat(t_philo *p)
     unsigned long tf;
 
     tf = get_time() - (p->para->t_start);
-    if (check_dead(p, tf))
+    if (check_dead(p, tf) || check_end(p))
         return (1);
     p->lastmeal = tf;
     p->meals = p->meals + 1;
@@ -66,7 +66,7 @@ int ft_sleep(t_philo *p)
     unsigned long tf;
 
     tf = get_time() - (p->para->t_start);
-    if (check_dead(p, tf))
+    if (check_dead(p, tf) || check_end(p))
         return (1);
     printf_msg(tf, p, 4);
     // died during sleep
@@ -88,7 +88,7 @@ int thinking(t_philo *p)
     time = p->para->t_dead - p->para->t_eat;
     time -= p->para->t_slp;
     tf = get_time() - (p->para->t_start);
-    if (check_dead(p, tf))
+    if (check_dead(p, tf) || check_end(p))
         return (1);
     printf_msg(tf, p, 5);
     if (p->para->t_dead <= p->para->t_eat * 2 || \

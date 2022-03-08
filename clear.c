@@ -9,7 +9,7 @@ void free_para(t_para *para)
     {
         if (para->philos)
             free(para->philos);
-        while(para->forks && i < para->n)
+        while(para->forks && ++i < para->n)
         {
             pthread_mutex_lock(&para->forks[i]);
             pthread_mutex_unlock(&para->forks[i]);
@@ -20,5 +20,8 @@ void free_para(t_para *para)
         pthread_mutex_lock(&para->msg);
         pthread_mutex_unlock(&para->msg);
         pthread_mutex_destroy(&para->msg);
+        pthread_mutex_lock(&para->dead);
+        pthread_mutex_unlock(&para->dead);
+        pthread_mutex_destroy(&para->dead);
     }
 }

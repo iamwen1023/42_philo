@@ -19,9 +19,11 @@ int check_dead(t_philo *p, unsigned long tf)
 
     time = tf - p->lastmeal;
     pthread_mutex_lock(&p->para->dead);
-    if (time > (unsigned long)p->para->t_dead)
+    if (time >= (unsigned long)p->para->t_dead && !p->para->if_dead)
     {
         printf_msg(tf, p, 6);
+        p->para->if_dead = 1;
+        pthread_mutex_unlock(&p->para->dead);
         return (1);
     }
     pthread_mutex_unlock(&p->para->dead);
@@ -33,9 +35,17 @@ int check_end(t_philo *p)
     int i;
 
     i = -1;
-    if (!p->para->n_must)
-        return (0);
     pthread_mutex_lock(&p->para->dead);
+    if (p->para->if_dead)
+    {
+        pthread_mutex_unlock(&p->para->dead);
+        return (1);
+    }
+    if (!p->para->n_must)
+    {
+        pthread_mutex_unlock(&p->para->dead);
+        return (0);
+    }   
     while (++i < p->para->n)
     {
         if (p->meals < p->para->totalmeals)

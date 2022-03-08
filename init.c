@@ -30,6 +30,7 @@ int initial(t_para *para, char **av)
     else
         para->n_must = 0;
     para->totalmeals = 0;
+    para->if_dead = 0;
     para->philos = (t_philo*)malloc(para->n * sizeof(*(para->philos)));
     if (!para->philos)
         return (1);

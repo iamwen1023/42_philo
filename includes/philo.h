@@ -11,6 +11,7 @@ typedef struct s_para {
     int t_dead;
     int n_must;
     int totalmeals;
+    int if_dead;
     unsigned long   t_start;
     pthread_mutex_t *forks;
     pthread_mutex_t msg;
