@@ -1,6 +1,6 @@
 #include "philo.h"
 
-void take_fork(t_philo *p)
+int take_fork(t_philo *p)
 {
     int firstfork;
     int secondfork;
@@ -17,11 +17,22 @@ void take_fork(t_philo *p)
         firstfork = (p->index + 1) % p->para->n;
     }
     pthread_mutex_lock(&p->para->forks[firstfork]);
+    if (check_dead(p) || check_end(p))
+    {
+        pthread_mutex_unlock(&p->para->forks[firstfork]);
+        return (1);
+    }
     p->lfork = 1;
     printf_msg(p, 1);   
     pthread_mutex_lock(&p->para->forks[secondfork]);
+    if (check_dead(p) || check_end(p))
+    {
+        pthread_mutex_unlock(&p->para->forks[firstfork]);
+        return (1);
+    }
     p->rfork = 1;
     printf_msg(p, 1);
+    return (0);
 }
 
 void remove_fork(t_philo *p)

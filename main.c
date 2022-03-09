@@ -2,11 +2,9 @@
 
 void *routine(void *arg)
 {
-    unsigned long   tf;
     t_philo         *p;
 
     p = (t_philo *)(arg);
-    tf = get_time() - (p->para->t_start);
     if (p->para->n == 1)
     {
         printf_msg(p, 1);
@@ -16,7 +14,8 @@ void *routine(void *arg)
     }
     while(!check_dead(p) && !check_end(p))
     {
-        take_fork(p);
+        if (take_fork(p))
+            return (NULL);
         if (eat(p))
             return (NULL);
         if (check_end(p))

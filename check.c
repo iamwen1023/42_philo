@@ -50,8 +50,9 @@ int check_end(t_philo *p)
     }   
     while (++i < p->para->n)
     {
-        if (p->meals < p->para->totalmeals)
+        if (p->meals < p->para->n_must)
         {
+            printf("meals:%d %d\n", p->index, p->meals);
             pthread_mutex_unlock(&p->para->dead);
             return (0);
         }
