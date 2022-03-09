@@ -1,9 +1,12 @@
 #include "philo.h"
-void    printf_msg(unsigned long tf, t_philo *p, int i)
+void    printf_msg(t_philo *p, int i)
 {
+    unsigned long tf;
+
     pthread_mutex_lock(&p->para->msg);
+    tf = get_time() - p->para->t_start;
     if (i == 1)
-        printf("[%lu ms] #%d has a lfork\n", tf, p->index + 1);
+        printf("[%lu ms] #%d has a fork\n", tf, p->index + 1);
     else if (i == 2)
         printf("[%lu ms] #%d has a rfork\n", tf, p->index + 1);
     else if (i == 3)

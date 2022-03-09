@@ -2,20 +2,20 @@
 
 void *routine(void *arg)
 {
-    unsigned long tf;
-    t_philo *p;
+    unsigned long   tf;
+    t_philo         *p;
 
     p = (t_philo *)(arg);
+    tf = get_time() - (p->para->t_start);
     if (p->para->n == 1)
     {
-        printf_msg(get_time() - p->para->t_start, p, 1);
+        printf_msg(p, 1);
         ft_usleep((unsigned long)p->para->t_dead);
-        printf_msg(p->para->t_dead, p, 6);
+        printf_msg(p, 6);
         return (NULL);
     }
-    tf = get_time() - (p->para->t_start);
-    while(!check_dead(p, tf) && !check_end(p))
-    { 
+    while(!check_dead(p) && !check_end(p))
+    {
         take_fork(p);
         if (eat(p))
             return (NULL);
@@ -25,7 +25,6 @@ void *routine(void *arg)
             return (NULL);
         if (thinking(p))
             return (NULL);
-        tf = get_time() - (p->para->t_start);
     }
     return 0;
 }
@@ -39,13 +38,16 @@ int    run(t_para *para)
     para->t_start = get_time();
     while(++i < para->n)
     {
+        para->philos[i].lastmeal = para->t_start;
         philo = (void *)&para->philos[i];
-        pthread_create(&para->philos[i].thread, NULL, routine, (void *)philo);
+        if (pthread_create(&para->philos[i].thread, NULL, routine, (void *)philo))
+            return (1);
     }
     i= -1;
     while(++i < para->n)
     {
-        pthread_join(para->philos[i].thread, NULL);
+        if (pthread_join(para->philos[i].thread, NULL))
+            return (1);
     }
     return (0);
 }
@@ -54,18 +56,23 @@ int main(int ac, char** av)
 {
     t_para para;
 
-    if (ac < 5 || check_aug(ac, av))
+    if (ac < 5 || ac > 6 || check_aug(ac, av))
     {
-        printf("Arguments errors!\n");   
+        printf("Arguments errors\n");   
         return (1);
     }
     if (initial(&para, av))
     {
-        printf("Something went wrong while executing!\n"); 
+        printf("Something went wrong while executing\n"); 
         free_para(&para);
         return (1);
     }
-    run(&para);
+    if (run(&para))
+    {
+        printf("Something went wrong while executing\n"); 
+        free_para(&para);
+        return (1);
+    }
     free_para(&para);
     printf("end\n");
     return (0);

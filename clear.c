@@ -7,6 +7,7 @@ void free_para(t_para *para)
     i = -1;
     if (para)
     {
+        printf("inside\n");
         if (para->philos)
             free(para->philos);
         while(para->forks && ++i < para->n)
@@ -23,5 +24,6 @@ void free_para(t_para *para)
         pthread_mutex_lock(&para->dead);
         pthread_mutex_unlock(&para->dead);
         pthread_mutex_destroy(&para->dead);
+        //free(para);
     }
 }

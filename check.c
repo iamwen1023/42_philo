@@ -7,21 +7,23 @@ int check_aug(int ac, char **av)
     i = 0;
     while (++i < ac)
     {
-        if (ft_atoi(av[i]) < 0 || !if_num(av[i]))
+        if (ft_atoi(av[i]) <= 0 || !if_num(av[i]))
+            return (1);
+        if (i == 1 && ft_atoi(av[i]) > 200)
             return (1);
     }
     return (0);
 }
 
-int check_dead(t_philo *p, unsigned long tf)
+int check_dead(t_philo *p)
 {
     unsigned long time;
 
-    time = tf - p->lastmeal;
     pthread_mutex_lock(&p->para->dead);
+    time = get_time() - p->lastmeal;
     if (time >= (unsigned long)p->para->t_dead && !p->para->if_dead)
     {
-        printf_msg(tf, p, 6);
+        printf_msg(p, 6);
         p->para->if_dead = 1;
         pthread_mutex_unlock(&p->para->dead);
         return (1);
@@ -49,7 +51,10 @@ int check_end(t_philo *p)
     while (++i < p->para->n)
     {
         if (p->meals < p->para->totalmeals)
+        {
+            pthread_mutex_unlock(&p->para->dead);
             return (0);
+        }
     }
     pthread_mutex_unlock(&p->para->dead);
     return (1);

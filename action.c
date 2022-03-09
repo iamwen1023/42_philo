@@ -2,11 +2,9 @@
 
 void take_fork(t_philo *p)
 {
-    unsigned long tf;
     int firstfork;
     int secondfork;
 
-    tf = get_time() - (p->para->t_start);
     if (p->index % 2)
     {
         ft_usleep(1);
@@ -20,10 +18,10 @@ void take_fork(t_philo *p)
     }
     pthread_mutex_lock(&p->para->forks[firstfork]);
     p->lfork = 1;
-    printf_msg(tf, p, 1);   
+    printf_msg(p, 1);   
     pthread_mutex_lock(&p->para->forks[secondfork]);
     p->rfork = 1;
-    printf_msg(tf, p, 2);
+    printf_msg(p, 1);
 }
 
 void remove_fork(t_philo *p)
@@ -48,14 +46,24 @@ void remove_fork(t_philo *p)
 
 int eat(t_philo *p)
 {
-    unsigned long tf;
-
-    tf = get_time() - (p->para->t_start);
-    if (check_dead(p, tf) || check_end(p))
+    if (check_dead(p) || check_end(p))
         return (1);
-    p->lastmeal = tf;
+    p->lastmeal = get_time();
+    printf_msg(p, 3);
+    if (p->para->t_dead <= p->para->t_eat)
+    {
+        ft_usleep(p->para->t_dead);
+        pthread_mutex_lock(&p->para->dead);
+        if (!p->para->if_dead)
+            printf_msg(p, 6);
+        p->para->if_dead = 1;
+        pthread_mutex_unlock(&p->para->dead);
+        remove_fork(p);
+        return (1);
+    }
+    pthread_mutex_lock(&p->para->dead);
     p->meals = p->meals + 1;
-    printf_msg(tf, p, 3);
+    pthread_mutex_unlock(&p->para->dead);
     ft_usleep(p->para->t_eat);
     remove_fork(p);
     return (0);
@@ -63,42 +71,46 @@ int eat(t_philo *p)
 
 int ft_sleep(t_philo *p)
 {
-    unsigned long tf;
-
-    tf = get_time() - (p->para->t_start);
-    if (check_dead(p, tf) || check_end(p))
+    if (check_dead(p) || check_end(p))
         return (1);
-    printf_msg(tf, p, 4);
-    // died during sleep
-    if (tf - p->lastmeal > (unsigned long)p->para->t_dead)
+    if (p->para->t_dead <= p->para->t_slp || \
+        p->para->t_dead <= p->para->t_eat + p->para->t_slp)
     {
-        ft_usleep((unsigned long)(p->lastmeal + p->para->t_dead));
-        printf_msg(p->lastmeal + p->para->t_dead, p, 6);
+        printf_msg(p, 4);
+        ft_usleep(p->para->t_dead - p->para->t_eat);
+        pthread_mutex_lock(&p->para->dead);
+        if (!p->para->if_dead)
+            printf_msg(p, 6);
+        p->para->if_dead = 1;
+        pthread_mutex_unlock(&p->para->dead);
         return (1);
     }
+    printf_msg(p, 4);
     ft_usleep(p->para->t_slp);
+    if (check_dead(p))
+        return (1);
     return (0);
 }
 
 int thinking(t_philo *p)
 {
     int time;
-    unsigned long tf;
 
+    if (check_dead(p) || check_end(p))
+        return (1);
+    printf_msg(p, 5);
     time = p->para->t_dead - p->para->t_eat;
     time -= p->para->t_slp;
-    tf = get_time() - (p->para->t_start);
-    if (check_dead(p, tf) || check_end(p))
-        return (1);
-    printf_msg(tf, p, 5);
     if (p->para->t_dead <= p->para->t_eat * 2 || \
         (p->para->t_dead <= (p->para->t_eat * 2 + p->para->t_slp) && \
         p->para->n % 2 != 0))
     {
         ft_usleep((unsigned long)time);
-        printf_msg((unsigned long)time, p, 6);
-
+        pthread_mutex_lock(&p->para->dead);
+        if (!p->para->if_dead)
+            printf_msg(p, 6);
+        p->para->if_dead = 1;
+        pthread_mutex_unlock(&p->para->dead);
     }
-    //printf("[%lu ms] #%d is thinking\n", tf, p->index);
     return (0);
 }
