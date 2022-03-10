@@ -2,21 +2,31 @@
 void    printf_msg(t_philo *p, int i)
 {
     unsigned long tf;
+    char *str;
 
-    pthread_mutex_lock(&p->para->msg);
-    tf = get_time() - p->para->t_start;
+    str = NULL;
+    pthread_mutex_lock(&p->para->dead);
+    if (p->para->if_dead)
+    {
+        pthread_mutex_unlock(&p->para->dead);
+        return ;
+    }
+    pthread_mutex_unlock(&p->para->dead);
+    if (check_end(p))
+        return ;
     if (i == 1)
-        printf("%lu %d has a fork\n", tf, p->index + 1);
-    else if (i == 2)
-        printf("%lu %d has a rfork\n", tf, p->index + 1);
+        str="has taken a fork\n";
     else if (i == 3)
-        printf("%lu %d is eating\n", tf, p->index + 1);
+        str="is eating\n";
     else if (i == 4)
-        printf("%lu %d is sleeping\n", tf, p->index + 1);
+        str="is sleeping\n";
     else if (i == 5)
-        printf("%lu %d is thinking\n", tf, p->index + 1);
+        str="is thinking\n";
     else if (i == 6)
-        printf("%lu %d died\n", tf, p->index + 1);
+        str="died\n";
+    tf = get_time() - p->para->t_start;
+    pthread_mutex_lock(&p->para->msg);
+    printf("%lu %d %s", tf, p->index + 1, str);
     pthread_mutex_unlock(&p->para->msg);
 }
 

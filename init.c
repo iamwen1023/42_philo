@@ -34,6 +34,7 @@ int initial(t_para *para, char **av)
     para->philos = (t_philo*)malloc(para->n * sizeof(*(para->philos)));
     if (!para->philos)
         return (1);
+    init_philo(para);
     para->forks = malloc(para->n * sizeof(pthread_mutex_t));
     if (!para->forks)
         return (1);
@@ -41,6 +42,5 @@ int initial(t_para *para, char **av)
         pthread_mutex_init(&para->forks[i], NULL);
     pthread_mutex_init(&para->msg, NULL);
     pthread_mutex_init(&para->dead, NULL);
-    init_philo(para);
     return (0);
 }

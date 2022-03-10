@@ -1,5 +1,17 @@
 #include "philo.h"
 
+void first_thinking(t_philo *p)
+{
+    pthread_mutex_lock(&p->para->dead);
+    if (!p->para->if_dead)
+    {
+        pthread_mutex_unlock(&p->para->dead);
+        printf_msg(p, 5);
+        return ;
+    }
+    pthread_mutex_unlock(&p->para->dead);
+}
+
 void *routine(void *arg)
 {
     t_philo         *p;
@@ -12,14 +24,14 @@ void *routine(void *arg)
         printf_msg(p, 6);
         return (NULL);
     }
-    while(!check_dead(p) && !check_end(p))
+    //first_thinking(p);
+    //while(!check_dead(p) && !check_end(p))
+    while(1)
     {
         if (take_fork(p))
             return (NULL);
         if (eat(p))
             return (NULL);
-        if (check_end(p))
-            break;
         if (ft_sleep(p))
             return (NULL);
         if (thinking(p))

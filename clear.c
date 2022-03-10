@@ -10,20 +10,15 @@ void free_para(t_para *para)
         printf("inside\n");
         if (para->philos)
             free(para->philos);
-        while(para->forks && ++i < para->n)
+        if (para->forks)
         {
-            pthread_mutex_lock(&para->forks[i]);
-            pthread_mutex_unlock(&para->forks[i]);
-            pthread_mutex_destroy(&para->forks[i]);
+            while(++i < para->n)
+                pthread_mutex_destroy(&para->forks[i]);
         }
+        pthread_mutex_destroy(&para->msg);
+        pthread_mutex_destroy(&para->dead);
         if (para->forks)
             free(para->forks);
-        pthread_mutex_lock(&para->msg);
-        pthread_mutex_unlock(&para->msg);
-        pthread_mutex_destroy(&para->msg);
-        pthread_mutex_lock(&para->dead);
-        pthread_mutex_unlock(&para->dead);
-        pthread_mutex_destroy(&para->dead);
         //free(para);
     }
 }
