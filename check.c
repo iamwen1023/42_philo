@@ -21,7 +21,7 @@ int check_dead(t_philo *p)
 
     pthread_mutex_lock(&p->para->dead);
     time = get_time() - p->lastmeal;
-    if (time >= (unsigned long)p->para->t_dead)
+    if (time >= (unsigned long)p->para->t_dead || p->para->if_dead)
     {
         pthread_mutex_unlock(&p->para->dead);
         printf_msg(p, 6);

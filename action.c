@@ -7,7 +7,7 @@ int take_fork(t_philo *p)
 
     if (check_dead(p) || check_end(p))
         return (1);
-    if (p->index % 2)
+    if (p->index % 2 == 0)
     {
         ft_usleep(1);
         firstfork = p->index;
@@ -37,13 +37,13 @@ void remove_fork(t_philo *p)
     firstfork = (p->index + 1) % p->para->n;
     if (p->lfork == 1)
     {
-        pthread_mutex_unlock(&p->para->forks[firstfork]);
         p->lfork = 0;
+        pthread_mutex_unlock(&p->para->forks[firstfork]);
     }
     if (p->rfork == 1)
     {
-        pthread_mutex_unlock(&p->para->forks[secondfork]);
         p->rfork = 0;
+        pthread_mutex_unlock(&p->para->forks[secondfork]);
     }
 
 }

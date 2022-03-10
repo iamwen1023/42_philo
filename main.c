@@ -25,13 +25,18 @@ void *routine(void *arg)
         return (NULL);
     }
     //first_thinking(p);
-    //while(!check_dead(p) && !check_end(p))
-    while(1)
+    while(!check_dead(p) && !check_end(p))
     {
         if (take_fork(p))
+	{
+	    remove_fork(p);
             return (NULL);
+	}
         if (eat(p))
+	{
+	    remove_fork(p);
             return (NULL);
+	}
         if (ft_sleep(p))
             return (NULL);
         if (thinking(p))

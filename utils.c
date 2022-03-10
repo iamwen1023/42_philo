@@ -11,9 +11,6 @@ void    printf_msg(t_philo *p, int i)
         pthread_mutex_unlock(&p->para->dead);
         return ;
     }
-    pthread_mutex_unlock(&p->para->dead);
-    if (check_end(p))
-        return ;
     if (i == 1)
         str="has taken a fork\n";
     else if (i == 3)
@@ -28,6 +25,7 @@ void    printf_msg(t_philo *p, int i)
     pthread_mutex_lock(&p->para->msg);
     printf("%lu %d %s", tf, p->index + 1, str);
     pthread_mutex_unlock(&p->para->msg);
+    pthread_mutex_unlock(&p->para->dead);
 }
 
 unsigned long get_time()
