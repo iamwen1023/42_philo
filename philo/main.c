@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 12:15:36 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/03/12 14:41:36 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/03/12 15:05:27 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,5 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	free_para(&para);
-	printf("end\n");
 	return (0);
 }

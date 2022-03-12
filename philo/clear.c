@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 12:15:16 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/03/12 14:07:56 by wlo              ###   ########.fr       */
+/*   Updated: 2022/03/12 15:05:34 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	free_para(t_para *para)
 	i = -1;
 	if (para)
 	{
-		printf("inside\n");
 		if (para->philos)
 			free(para->philos);
 		if (para->forks)
