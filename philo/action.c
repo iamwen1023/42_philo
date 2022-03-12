@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 12:14:55 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/03/12 15:35:09 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/03/12 15:59:46 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int	eat(t_philo *p)
 		pthread_mutex_lock(&p->para->dead);
 		p->para->if_dead = 1;
 		pthread_mutex_unlock(&p->para->dead);
-		remove_fork(p);
 		return (1);
 	}
 	p->meals = p->meals + 1;
@@ -87,9 +86,11 @@ int	eat(t_philo *p)
 	if (p->para->n_must > 0 && p->meals == p->para->n_must)
 		p->para->totalmeals += 1;
 	pthread_mutex_unlock(&p->para->dead);
+	if (check_end(p))
+		return (1);
 	ft_usleep(p->para->t_eat);
 	remove_fork(p);
-	if (check_dead(p) || check_end(p))
+	if (check_dead(p))
 		return (1);
 	return (0);
 }
