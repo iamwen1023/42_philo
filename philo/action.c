@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 12:14:55 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/03/12 15:59:46 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/03/12 16:22:09 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,14 +120,10 @@ int	ft_sleep(t_philo *p)
 int	thinking(t_philo *p)
 {
 	int				time;
-	unsigned long	tf;
 
 	if (check_dead(p))
 		return (1);
 	printf_msg(p, 5);
-	tf = p->lastmeal + (unsigned long)p->para->t_dead;
-	if ((get_time() + (unsigned long)p->para->t_eat) < tf)
-		ft_usleep(p->para->t_eat + 10);
 	time = p->para->t_dead - p->para->t_eat - p->para->t_slp;
 	if (p->para->t_dead <= p->para->t_eat * 2 || \
 	(p->para->t_dead <= (p->para->t_eat * 2 + p->para->t_slp) && \
