@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/19 15:35:03 by wlo               #+#    #+#             */
-/*   Updated: 2022/03/06 22:49:22 by ifeelbored       ###   ########.fr       */
+/*   Created: 2022/03/12 12:15:16 by ifeelbored        #+#    #+#             */
+/*   Updated: 2022/03/12 14:07:56 by wlo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_isdigit(int c)
+void	free_para(t_para *para)
 {
-	if (c > 47 && c < 58)
-		return (1);
-	return (0);
-}
+	int	i;
 
-int if_num(char *c)
-{
-	int i;
-
-	i = 0;
-	if (!*c)
-		return (0);
-	while (c[i])
+	i = -1;
+	if (para)
 	{
-		if (!ft_isdigit(c[i]))
-			return (0);
-		i++;
+		printf("inside\n");
+		if (para->philos)
+			free(para->philos);
+		if (para->forks)
+		{
+			while (++i < para->n)
+				pthread_mutex_destroy(&para->forks[i]);
+		}
+		pthread_mutex_destroy(&para->dead);
+		if (para->forks)
+			free(para->forks);
 	}
-	return (1);
 }
