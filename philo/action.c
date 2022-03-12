@@ -6,7 +6,7 @@
 /*   By: ifeelbored <ifeelbored@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 12:14:55 by ifeelbored        #+#    #+#             */
-/*   Updated: 2022/03/12 14:00:15 by ifeelbored       ###   ########.fr       */
+/*   Updated: 2022/03/12 15:35:09 by ifeelbored       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,16 @@ void	remove_fork(t_philo *p)
 	int	firstfork;
 	int	secondfork;
 
-	secondfork = p->index;
-	firstfork = (p->index + 1) % p->para->n;
+	if (p->index % 2 == 0)
+	{
+		firstfork = p->index;
+		secondfork = (p->index + 1) % p->para->n;
+	}
+	else
+	{
+		secondfork = p->index;
+		firstfork = (p->index + 1) % p->para->n;
+	}
 	if (p->lfork == 1)
 	{
 		p->lfork = 0;
